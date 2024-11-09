@@ -24,3 +24,9 @@ if __name__ == "__main__":
         arr.append(Item(profit, weight))
     w = int(input("Enter capacity of knapsack-\n"))
     print("Maximum value in knapsack: ", fractionalKnapsack(w, arr))
+
+"""
+
+
+The Fractional Knapsack Problem allows breaking items into fractions to maximize profit while staying within the knapsack’s capacity. The solution uses a greedy algorithm, where items are sorted by their profit-to-weight ratio, and then added to the knapsack in that order. If an item can't fit entirely, its fraction is added based on the remaining capacity.
+time complexity is O(n log n).
