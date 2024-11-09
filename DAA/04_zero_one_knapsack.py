@@ -21,11 +21,26 @@ def knapsack_01(n, values, weights, W):
     return dp[n][W], selected_items
 
 if __name__ == "__main__":
-    n = 3
-    values = [60, 100, 120]
-    weights = [10, 20, 30]
-    W = 50
-
+    n = int(input("Enter the number of items: "))
+    
+    values = []
+    weights = []
+    
+    for i in range(n):
+        value = int(input(f"Enter the value of item {i+1}: "))
+        weight = int(input(f"Enter the weight of item {i+1}: "))
+        values.append(value)
+        weights.append(weight)
+    
+    W = int(input("Enter the capacity of the knapsack: "))
+    
     max_value, selected_items = knapsack_01(n, values, weights, W)
-    print("Maximum value:", max_value)
-    print("Selected items:", selected_items)
+    
+    print(f"Maximum value in knapsack: {max_value}")
+    print("Selected items (indices):", selected_items)
+
+
+"""Branch and Bound is an algorithmic technique used to solve optimization problems by exploring all possible solutions in a systematic way. In the context of sorting, it can be applied to problems where there are additional constraints, such as minimizing swaps or comparisons. The process involves branching into subproblems, bounding to evaluate the best possible solutions, and pruning to discard suboptimal paths. While not commonly used in traditional sorting algorithms, it can optimize constrained sorting tasks. It’s mainly used when sorting involves optimization beyond just arranging data in order."""
+
+Worst-case: O(2^n)
+Best-case: O(n×W) 
