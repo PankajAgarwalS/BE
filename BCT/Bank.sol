@@ -1,42 +1,39 @@
-// SPDX-License-Identifier: MIT
+// SPDX-License-Identifier: Bhide License
 pragma solidity ^0.8.0;
 
-contract BankAccount {
-
-    // Mapping to store the balance of each customer (address)
+contract Bank {
+    // mapping(type => type) 
     mapping(address => uint256) private balances;
 
-    // Event to log deposits
-    event Deposit(address indexed accountHolder, uint256 amount);
-
-    // Event to log withdrawals
-    event Withdraw(address indexed accountHolder, uint256 amount);
-
-    // Deposit money into the customer's account
-    function deposit() public payable {
-        require(msg.value > 0, "You must send some Ether to deposit.");  // Ensure Ether is sent
-        balances[msg.sender] += msg.value;  // Add deposited amount to the sender's balance
-        emit Deposit(msg.sender, msg.value);  // Log the deposit event
+    function createAccount() public {
+        balances[msg.sender] = 0;
     }
 
-    // Withdraw money from the customer's account (in ether)
-    function withdraw(uint256 amountInEther) public {
-        uint256 amountInWei = amountInEther * 1 ether;  // Convert the withdrawal amount to wei
-        require(amountInWei > 0, "Withdrawal amount must be greater than zero.");
-        require(amountInWei <= balances[msg.sender], "Insufficient balance.");
-
-        // Transfer the specified amount to the sender
-        payable(msg.sender).transfer(amountInWei);
-
-        // Deduct withdrawn amount from sender's balance
-        balances[msg.sender] -= amountInWei;
-
-        // Log the withdrawal event
-        emit Withdraw(msg.sender, amountInWei);
+    // payable is necessary because the function accepts a value (amount) as a parameter (EXTERNAL SOURCE AHE MHANUN)
+    function deposit(uint256 amount) public payable {
+        balances[msg.sender] += amount;
     }
 
-    // Check the balance of the customer
-    function checkBalance() public view returns (uint256) {
-        return balances[msg.sender];  // Return the balance of the sender
+    function withdraw(uint256 amount) public {
+        require(balances[msg.sender] >= amount, "Insufficient balance");
+        balances[msg.sender] -= amount;
+    }
+
+    function transfer(address recipient, uint256 amount) public {
+        require(balances[msg.sender] >= amount, "Insufficient balance");
+        balances[msg.sender] -= amount;
+        balances[recipient] += amount;
+    }
+
+    // view does not modify values within the contract (return kartana lihaycha)
+    function getBalance() public view returns (uint256) {
+        return balances[msg.sender];
     }
 }
+
+//install metamask
+change to testnet sepolia
+open 2 accounts
+open sepolia faucet and paste wallet address
+in remix deploy tab open environment and select connected wallets
+then deploy
