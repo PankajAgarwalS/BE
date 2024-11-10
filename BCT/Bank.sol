@@ -2,28 +2,32 @@
 pragma solidity ^0.8.0;
 
 contract Bank {
-    // mapping(type => type) 
-    mapping(address => uint256) private balances;
 
-    function createAccount() public {
-        balances[msg.sender] = 0;
+    address public accHolder;
+    uint256 balance = 0;
+
+    constructor(){
+        accHolder = msg.sender;
     }
 
-    // payable is necessary because the function accepts a value (amount) as a parameter (EXTERNAL SOURCE AHE MHANUN)
-    function deposit(uint256 amount) public payable {
-        balances[msg.sender] += amount;
+    function withdraw() public payable{
+        require(msg.sender == accHolder, "you are not the account owner.");
+        require(balance > 0,"Deposit amount should be greater than 0.");
+        balance -= msg.value;
     }
 
-    function withdraw(uint256 amount) public {
-        require(balances[msg.sender] >= amount, "Insufficient balance");
-        balances[msg.sender] -= amount;
+    function deposit() public payable {
+        require(msg.sender == accHolder, "You are not the account owner."); 
+        require(msg.value > 0, "Deposit amount should be greater than 0."); 
+        balance += msg.value; 
     }
 
-    // view does not modify values within the contract (return kartana lihaycha)
-    function getBalance() public view returns (uint256) {
-        return balances[msg.sender];
-    }
+    function ShowBlance() public view returns (uint256){
+        require(msg.sender == accHolder,"you are not the account owner.");
+        return balance;
+    } 
 }
+
 
 //install metamask
 //change to testnet sepolia
