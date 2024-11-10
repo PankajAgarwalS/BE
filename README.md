@@ -1,1 +1,0 @@
-# TE-Comp-Sem-7
