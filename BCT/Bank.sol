@@ -1,4 +1,4 @@
-// SPDX-License-Identifier: Bhide License
+// SPDX-License-Identifier:  License
 pragma solidity ^0.8.0;
 
 contract Bank {
@@ -19,12 +19,6 @@ contract Bank {
         balances[msg.sender] -= amount;
     }
 
-    function transfer(address recipient, uint256 amount) public {
-        require(balances[msg.sender] >= amount, "Insufficient balance");
-        balances[msg.sender] -= amount;
-        balances[recipient] += amount;
-    }
-
     // view does not modify values within the contract (return kartana lihaycha)
     function getBalance() public view returns (uint256) {
         return balances[msg.sender];
@@ -32,8 +26,7 @@ contract Bank {
 }
 
 //install metamask
-change to testnet sepolia
-open 2 accounts
-open sepolia faucet and paste wallet address
-in remix deploy tab open environment and select connected wallets
-then deploy
+//change to testnet sepolia
+//open sepolia faucet and paste wallet address
+//in remix deploy tab open environment and select connected wallets
+//then deploy
