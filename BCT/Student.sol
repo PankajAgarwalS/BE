@@ -1,53 +1,54 @@
 // SPDX-License-Identifier: MIT
 pragma solidity ^0.8.0;
 
-contract StudentData {
-    // Structure to store student information
+contract StudentAdd {
+    // Structure to store student data
     struct Student {
         string name;
-        uint256 age;
-        uint256 id;
+        uint256 rollno;
     }
 
-    // Mapping to store students by their ID
-    mapping(uint256 => Student) private studentsById;
+    Student[] public studentarr;
 
-    // Variable to track total number of students
-    uint256 private totalStudents;
+    // Mapping to store student by roll number for quick lookup
+    mapping(uint256 => Student) private studentsByRollNo;
 
-    // Event to emit when a student is added
-    event StudentAdded(string name, uint256 age, uint256 id);
+    // Function to add a student
+    function addStudent(string memory name, uint256 rollno) public {
+        // Check if a student with the given roll number already exists
+        require(studentsByRollNo[rollno].rollno == 0, "Student with this roll number already exists");
 
-    // Function to add a new student
-    function addStudent(string memory _name, uint256 _age, uint256 _id) public {
-        // Create a new student struct and add it to the mapping
-        Student memory newStudent = Student({
-            name: _name,
-            age: _age,
-            id: _id
-        });
+        // Create new student and push to array
+        Student memory newStudent = Student(name, rollno);
+        studentarr.push(newStudent);
 
-        studentsById[_id] = newStudent;
-        totalStudents++; // Increment the total student count
-        emit StudentAdded(_name, _age, _id);
-    }
-
-    // Function to retrieve student information by id
-    function getStudentById(uint256 _id) external view returns (string memory name, uint256 age, uint256 id) {
-        require(studentsById[_id].id != 0, "Student not found.");
-        Student memory student = studentsById[_id];
-        return (student.name, student.age, student.id);
+        // Add student to the mapping for quick access by roll number
+        studentsByRollNo[rollno] = newStudent;
     }
 
     // Function to get the total number of students
-    function getTotalStudents() external view returns (uint256) {
-        return totalStudents; // Return the current count of students
+    function getStudentsLength() public view returns (uint256) {
+        return studentarr.length;
     }
 
-    // Fallback function to receive Ether (optional)
+    // Function to display all students
+    function displayAllStudents() public view returns (Student[] memory) {
+        return studentarr;
+    }
+
+    // Function to get a student by roll number
+    function getStudentByRollNo(uint256 rollno) public view returns (string memory name, uint256 roll) {
+        require(studentsByRollNo[rollno].rollno != 0, "Student not found");
+        Student memory student = studentsByRollNo[rollno];
+        return (student.name, student.rollno);
+    }
+
+    // Fallback function
+    fallback() external payable {}
+
+    // Receive function to accept Ether
     receive() external payable {}
 }
-
 
 
 //install metamask
@@ -57,18 +58,17 @@ in remix deploy tab open environment and select connected wallets
 then deploy
 
 
+Structures: Structures (or structs) in Solidity allow us to create complex data types. In this problem, we'll create a Student struct to hold student information such as name and roll number.
 
-The StudentData smart contract showcases key concepts of blockchain-based data storage and interaction on the Ethereum network. Here's a brief explanation of the core concepts:
+Arrays: Arrays will be used to store multiple student records. We can use either dynamic or fixed-size arrays; in this case, a dynamic array allows us to add as many students as needed.
 
-1. Smart Contracts:
-A smart contract is a self-executing program that runs on the blockchain. It contains predefined logic and rules (written in Solidity, in this case) and automatically enforces those rules when specific conditions are met.
-In this contract, the logic manages student data and allows interactions like adding a student, retrieving information, and tracking the total number of students.
-2. Structs:
-A struct is a custom data type that groups multiple variables of different types into one unit. In the contract, the Student struct contains three variables: name, age, and id, which represent a student's basic information.
-Structs help organize data efficiently in a contract and enable storing complex data types.
-3. Mappings:
-A mapping is a key-value store in Solidity, used to store data in a way that can be accessed via a unique key. Here, the mapping(uint256 => Student) associates each student's ID (of type uint256) with their corresponding Student struct.
-This allows efficient retrieval and modification of student data based on their unique ID.
-4. Events:
-Events are important for logging activities that occur on the blockchain. They allow external applications (like dApps or front-end interfaces) to listen and react to state changes in the contract.
-In this case, the StudentAdded event is emitted every time a new student is added, notifying any listeners of this action.
+Fallback Function: The fallback function is a special function in Solidity that gets executed when a contract receives Ether without any data. This is useful for making the contract capable of accepting payments or handling unexpected interactions gracefully.
+
+Key Concepts
+Structs: They help in creating user-defined data types. In this program, we use a struct to represent a student entity with a name and roll number.
+
+Dynamic Arrays: We will use a dynamic array to store student structs. This makes it possible to add new entries dynamically during runtime.
+
+Fallback and Receive Functions: These functions allow the contract to accept Ether payments, demonstrating that contracts can handle payments alongside data operations.
+
+Gas Costs: Every transaction on the Ethereum blockchain requires gas, which is a measure of computational work. Deploying a smart contract, calling functions, and writing to storage all consume gas. Observing gas costs helps in optimizing contracts to make them cost-efficient
